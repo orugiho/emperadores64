@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Administración y Vigilancia - Emperadores 64</title>
-
-    <!-- update the version number as needed -->
+    
+    <!-- Módulos Firebase Compat -->
     <script defer src="/__/firebase/12.16.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
     <script defer src="/__/firebase/12.16.0/firebase-auth-compat.js"></script>
     <script defer src="/__/firebase/12.16.0/firebase-database-compat.js"></script>
     <script defer src="/__/firebase/12.16.0/firebase-firestore-compat.js"></script>
@@ -17,277 +16,18 @@
     <script defer src="/__/firebase/12.16.0/firebase-analytics-compat.js"></script>
     <script defer src="/__/firebase/12.16.0/firebase-remote-config-compat.js"></script>
     <script defer src="/__/firebase/12.16.0/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
+    
+    <!-- Script de la aplicación -->
+    <script defer src="js/script.js"></script>
+
+    <!-- Auto-configuración de Firebase -->
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            display: flex;
-            min-height: 100vh;
-            background-color: #f7f9fa;
-        }
-
-        /* --- SECCIÓN IZQUIERDA: COMITÉ Y FOTO AJUSTADA --- */
-        .hero-side {
-            flex: 1.2;
-            position: relative;
-            /* Se usa color de fondo sólido basado en el edificio y 'contain' para evitar que se deforme o agrande demasiado */
-            background: linear-gradient(rgba(26, 68, 84, 0.85), rgba(26, 68, 84, 0.9)), url('edificio.jpg');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center bottom;
-            background-color: #c5bcb4; 
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            padding: 50px;
-        }
-
-        .hero-content {
-            max-width: 600px;
-            background-color: rgba(26, 68, 84, 0.7);
-            padding: 30px;
-            border-radius: 12px;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-        }
-
-        .hero-content h1 {
-            font-size: 2.3rem;
-            margin-bottom: 5px;
-            font-weight: 700;
-            color: #f3b137; /* Tono oro del logo */
-        }
-
-        .hero-content .subtitle {
-            font-size: 1.1rem;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.9;
-            border-bottom: 2px solid #f3b137;
-            padding-bottom: 10px;
-        }
-
-        .hero-content h3 {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            color: #fff;
-        }
-
-        .features-list {
-            list-style: none;
-        }
-
-        .features-list li {
-            font-size: 0.95rem;
-            margin-bottom: 18px;
-            line-height: 1.4;
-        }
-
-        .features-list strong {
-            color: #f3b137;
-            display: block;
-            font-size: 1rem;
-            margin-bottom: 2px;
-        }
-
-        /* --- SECCIÓN DERECHA: LOGO Y LOGIN GOOGLE --- */
-        .form-side {
-            width: 480px;
-            background-color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 50px 40px;
-            box-shadow: -5px 0 25px rgba(0,0,0,0.05);
-        }
-
-        .header-container {
-            text-align: center;
-            width: 100%;
-        }
-
-        .logo {
-            max-width: 200px;
-            height: auto;
-            margin-bottom: 15px;
-        }
-
-        .header-container h2 {
-            color: #1a4454;
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-        }
-
-        .header-container p {
-            color: #666;
-            font-size: 0.9rem;
-            line-height: 1.3;
-        }
-
-        /* Contenedor central de acceso */
-        .auth-container {
-            width: 100%;
-            margin: 40px 0;
-            text-align: center;
-        }
-
-        /* Botón Oficial estilo Google */
-        .btn-google {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #ffffff;
-            color: #1f1f1f;
-            border: 1px solid #747775;
-            border-radius: 4px;
-            padding: 12px 16px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.2s, box-shadow 0.2s;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .btn-google:hover {
-            background-color: #f8ffff;
-            box-shadow: 0 1px 3px 1px rgba(60,64,67,0.15);
-            border-color: #747775;
-        }
-
-        .btn-google svg {
-            margin-right: 12px;
-            width: 20px;
-            height: 20px;
-        }
-
-        .divider {
-            margin: 25px 0;
-            display: flex;
-            align-items: center;
-            color: #888;
-            font-size: 0.85rem;
-        }
-
-        .divider::before, .divider::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background-color: #e0e0e0;
-        }
-
-        .divider:not(:empty)::before { margin-right: .5em; }
-        .divider:not(:empty)::after { margin-left: .5em; }
-
-        .form-links a {
-            color: #1a4454;
-            text-decoration: none;
-            font-size: 0.9rem;
-            display: block;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
-        .form-links a:hover {
-            text-decoration: underline;
-        }
-
-        /* Dashboard Rápido (Accesos directos) */
-        .quick-dashboard {
-            width: 100%;
-            border-top: 1px solid #eee;
-            padding-top: 25px;
-            text-align: center;
-        }
-
-        .quick-dashboard h4 {
-            font-size: 0.8rem;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-        }
-
-        .grid-actions {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-
-        .action-card {
-            background-color: #f5edd7; 
-            padding: 12px 5px;
-            border-radius: 8px;
-            text-decoration: none;
-            color: #1a4454;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s, background-color 0.2s;
-        }
-
-        .action-card:hover {
-            transform: translateY(-3px);
-            background-color: #ebdcb2;
-        }
-
-        .action-card span {
-            font-size: 1.3rem;
-            margin-bottom: 5px;
-        }
-
-        /* Footer */
-        .footer-info {
-            font-size: 0.75rem;
-            color: #aaa;
-            text-align: center;
-            margin-top: 25px;
-            width: 100%;
-            line-height: 1.4;
-        }
-
-        .footer-info a {
-            color: #888;
-            text-decoration: none;
-        }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            body {
-                flex-direction: column;
-            }
-            .hero-side {
-                padding: 30px 20px;
-                min-height: auto;
-                background-size: cover; /* Cambia a cover en móviles para mejor estética */
-                background-position: center;
-            }
-            .form-side {
-                width: 100%;
-                padding: 40px 20px;
-            }
-        }
-    </style>
+    
+    <!-- Hoja de Estilos externa -->
+    <link rel="stylesheet" href="css/styles.css">
   </head>
   <body>
-      <!-- SECCIÓN IZQUIERDA -->
+    <!-- SECCIÓN IZQUIERDA -->
     <div class="hero-side">
         <div class="hero-content">
             <h1>Emperadores 64</h1>
@@ -328,22 +68,35 @@
         <!-- Contenedor de Autenticación con Google -->
         <div class="auth-container">
             
-            <!-- Botón de Google Auténtico -->
-            <button class="btn-google" onclick="location.href='#';">
-                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
-                    <path fill="#4285F4" d="M46.5 24c0-1.55-.15-3.24-.47-4.77H24v9.03h12.75c-.55 2.87-2.22 5.37-4.65 7l7.21 5.58C43.53 40.89 46.5 33.23 46.5 24z"></path>
-                    <path fill="#FBBC05" d="M10.54 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.98-6.19z"></path>
-                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.21-5.58c-2.11 1.41-4.81 2.39-8.68 2.39-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
-                </svg>
-                Continuar con Google
-            </button>
+            <!-- Vista 1: Botón de Google (Estado No Autenticado) -->
+            <div id="logged-out-view">
+                <button id="btn-google" class="btn-google" type="button">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+                        <path fill="#4285F4" d="M46.5 24c0-1.55-.15-3.24-.47-4.77H24v9.03h12.75c-.55 2.87-2.22 5.37-4.65 7l7.21 5.58C43.53 40.89 46.5 33.23 46.5 24z"></path>
+                        <path fill="#FBBC05" d="M10.54 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.98-6.19z"></path>
+                        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.21-5.58c-2.11 1.41-4.81 2.39-8.68 2.39-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+                    </svg>
+                    Continuar con Google
+                </button>
 
-            <div class="divider">o solicita registro</div>
-            
-            <div class="form-links">
-                <a href="#">Solicitar Acceso (Nuevos Propietarios / Residentes)</a>
+                <div class="divider">o solicita registro</div>
+                
+                <div class="form-links">
+                    <a href="#">Solicitar Acceso (Nuevos Propietarios / Residentes)</a>
+                </div>
             </div>
+
+            <!-- Vista 2: Perfil y Logout (Estado Autenticado) -->
+            <div id="logged-in-view" class="user-profile-card hidden">
+                <img id="user-photo" class="user-avatar" src="" alt="Foto de perfil">
+                <div class="user-info">
+                    <strong id="user-name">Cargando...</strong>
+                    <small id="user-email"></small>
+                </div>
+                <button id="btn-logout" class="btn-logout" type="button">Cerrar Sesión</button>
+            </div>
+
         </div>
 
         <!-- Accesos Rápidos -->
@@ -373,47 +126,9 @@
         <div class="footer-info">
             <strong>Condominio Emperadores 64</strong><br>
             Portales Norte, Benito Juárez, CDMX, CP 03300<br>
-            Contacto: admin@emperadores64.mx | <a href="#">Aviso de Privacidad</a>
+            Contacto: comite_vigilancia@emperadores.online | <a href="#">Aviso de Privacidad</a>
         </div>
 
     </div>
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
-    </script>
   </body>
 </html>
